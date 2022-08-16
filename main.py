@@ -6,10 +6,13 @@ import pprint
 
 url = "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest"
 
-parameters = {
-    'slug': 'polkadot',
-    'convert': 'BRL'
-}
+def get_coin(coin):
+    parameters = {
+        'slug': coin,
+        'convert': 'BRL'
+    }
+    return parameters
+
 
 headers = {
     'Accepts': 'application/json',
@@ -19,7 +22,9 @@ headers = {
 session = Session()
 session.headers.update(headers)
 
-response = session.get(url, params=parameters)
+coin = input()
+
+response = session.get(url, params=get_coin(coin=coin))
 # pprint.pprint(json.loads(response.text)["data"])
 
 first_dict = json.loads(response.text)["data"]
