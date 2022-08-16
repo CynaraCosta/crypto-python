@@ -13,6 +13,14 @@ def get_coin(coin):
     }
     return parameters
 
+def get_price(response):
+    first_dict = json.loads(response.text)["data"]
+    cad_coin = next(iter(first_dict))
+    price_value = json.loads(response.text)["data"][f"{cad_coin}"]["quote"]["BRL"]["price"]
+
+    price_usd_value_string = "R$ {:.2f}".format(price_value)
+    price_brl_value_string = price_usd_value_string.replace(".", ",")
+    return(price_brl_value_string)
 
 headers = {
     'Accepts': 'application/json',
@@ -26,11 +34,4 @@ coin = input()
 
 response = session.get(url, params=get_coin(coin=coin))
 # pprint.pprint(json.loads(response.text)["data"])
-
-first_dict = json.loads(response.text)["data"]
-cad_coin = next(iter(first_dict))
-price_value = json.loads(response.text)["data"][f"{cad_coin}"]["quote"]["BRL"]["price"]
-
-price_usd_value_string = "R$ {:.2f}".format(price_value)
-price_brl_value_string = price_usd_value_string.replace(".", ",")
-print(price_brl_value_string)
+print(get_price(response))
