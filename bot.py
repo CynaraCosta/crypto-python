@@ -15,11 +15,15 @@ channel = client.get_channel(1009189754761396274)
 @client.event 
 async def on_ready():
     channel = client.get_channel(1009189754761396274)
-    await channel.send(f"aaaaaaaa")
+    #await channel.send(f"aaaaaaaa")
 
 @client.command()
 async def ping(ctx):
     await ctx.channel.send('Pong! {0}'.format(round(client.latency, 1)))
+
+@client.command()
+async def clear_all(ctx):
+    await ctx.channel.purge()
 
 async def remind():
     await client.wait_until_ready()
