@@ -22,6 +22,7 @@ def get_price(response):
     price_brl_value_string = price_usd_value_string.replace(".", ",")
     return(price_brl_value_string)
 
+
 headers = {
     'Accepts': 'application/json',
     'X-CMC_PRO_API_KEY': config.api_key
@@ -30,8 +31,17 @@ headers = {
 session = Session()
 session.headers.update(headers)
 
-coin = input()
+# coin = input()
 
-response = session.get(url, params=get_coin(coin=coin))
+def get_coins(list_with_prices):
+    coins = ["bitcoin", "ethereum", "litecoin", "solana", "polkadot", "cardano", "dogecoin"]
+    for coin in coins:
+        response = session.get(url, params=get_coin(coin=coin))
+        list_with_prices.append(get_price(response))
+
+# response = session.get(url, params=get_coin(coin=coin))
 # pprint.pprint(json.loads(response.text)["data"])
-print(get_price(response))
+# print(get_price(response))
+
+
+
