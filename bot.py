@@ -7,6 +7,7 @@ import api
 
 WHEN = time(18, 00)
 now = datetime.now()
+AUDIO_FILE = 'audio_teste.mp3'
 
 # client = discord.Client()
 client = commands.Bot(command_prefix = "!")
@@ -17,6 +18,20 @@ async def on_ready():
     channel = client.get_channel(1009189754761396274)
     #await channel.send(f"aaaaaaaa")
 
+@client.event
+async def on_voice_state_update(member, before, after):
+    # Verifique se o membro entrou em um canal de voz
+    if before.channel is None and after.channel is not None:
+        # Obtenha o canal de voz e conecte-se a ele
+        channel = after.channel
+        voice = await channel.connect()
+        # Reproduza o áudio
+        voice.play(discord.FFmpegPCMAudio(AUDIO_FILE))
+        while voice.is_playing():
+            await asyncio.sleep(1)
+        # Desconecte-se do canal de voz
+        await voice.disconnect()
+
 @client.command()
 async def ping(ctx):
     await ctx.channel.send('Pong! {0}'.format(round(client.latency, 1)))
@@ -24,6 +39,22 @@ async def ping(ctx):
 @client.command()
 async def clear_all(ctx):
     await ctx.channel.purge()
+
+@client.command()
+async def cryptos(ctx):
+    await client.wait_until_ready()
+    # channel = client.get_channel(1009189754761396274)
+    list_with_prices = []
+    api.get_coins(list_with_prices= list_with_prices)
+    message = (f' \U0001F911 E vamos de precinhos das principais moedas de hoje! \U0001F911\n'
+    f'\t- **Bitcoin** => {list_with_prices[0]}\n'
+    f'\t- **Ethereum** => {list_with_prices[1]}\n'
+    f'\t- **Litecoin** => {list_with_prices[2]}\n'
+    f'\t- **Solana** => {list_with_prices[3]}\n'
+    f'\t- **Polkadot** => {list_with_prices[4]}\n'
+    f'\t- **Cardano** => {list_with_prices[5]}\n'
+    f'\t- **Dogecoin** => {list_with_prices[6]}\n')
+    await ctx.channel.send(message)
 
 async def remind():
     await client.wait_until_ready()
